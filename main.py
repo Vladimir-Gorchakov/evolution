@@ -23,16 +23,15 @@ window = pygame.display.set_mode((w, h))
 
 #set parameters
 G = -1/10**3
-EPS = 1/10**8
+EPS = 1/10**6
 # Create a particle system
 particle_system = System(h, w, FPS, G, EPS)
 
 # Add a particle
-num_particles = [200, 200, 100, 100]
-#polyarity_matrix = [[ 1,-1, 1],
-#                    [-1, 1, 1],
-#                    [ 1, 1, 1]]
-polyarity_matrix = list(np.random.rand(4,4)*2 - 1)
+num_particles = [200,200,200]
+#polyarity_matrix = [[ 1,-1],
+ #                   [1, -1]]
+polyarity_matrix = list(np.random.rand(3,3)*2 - 1)
 #print('polyarity_matrix ', polyarity_matrix)
 colours = [(0,255,0),(255,0,0),(0,0,255),(255,0,255)]
 mass = [1,1,1,1]

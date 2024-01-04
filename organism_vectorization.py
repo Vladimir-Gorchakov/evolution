@@ -1,8 +1,8 @@
 import numpy as np
 import pygame
 import time
-#import numexpr as ne
-from multiprocessing import Pool
+import numexpr as ne
+#from multiprocessing import Pool
 
 class Particle:
     def __init__(self, coord = None, dv = None, FPS = 30, mass = 1, colour = (200,200,200)): # first index - index of elemnt, second index of coordinate
@@ -31,21 +31,25 @@ class Gravity:
         self.G = G
         self.eps = EPS
         self.fps = FPS
-        self.reduce = 1 - 1/50
-        self.porog = 10**4
+        self.reduce = 1 - 1/5
+        self.porog = 10**6
     # gravitation force betveen two set of particles
     @staticmethod
     def _update(prtc1_cord, prtc2_cord, prtc2_dv, prct1_mass, polyarity, coeff, G, eps, fps, porog, red): #particle - object class Particle
         mass = prct1_mass
         r = prtc2_cord[:, np.newaxis] - prtc1_cord # r
-        r_norm = np.sum((r**2),axis=2)
-        r_norm = r_norm**(3/2)
-        masked_r = (r_norm < eps)
+        #r_norm = np.sum((r**2),axis=2)
+        r_norm = ne.evaluate('sum(r**2,axis = 2)')
+        #r_norm = r_norm**(3/2)
+        r_norm = ne.evaluate('r_norm**(3/2)')
+        #masked_r = r_norm < eps
+        masked_r = ne.evaluate('r_norm < eps')
         r_norm = np.expand_dims(np.reciprocal(r_norm + eps), axis = 2) # 1/|r|^2
         r_norm[masked_r] = 0
         r_norm[r_norm > porog] = 0
         gamma = coeff*G*mass*polyarity/fps
-        prtc2_dv += np.sum(r*r_norm, axis = 1)*gamma # F = -G*r/|r|^2
+        #prtc2_dv += np.sum(r*r_norm, axis = 1)*gamma # F = -G*r/|r|^2
+        prtc2_dv += np.sum(ne.evaluate('r*r_norm'), axis = 1)*gamma
         prtc2_dv *= red
 
     def update(self, particle1, particle2, polyarity, coeff):

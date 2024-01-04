@@ -1,2 +1,5 @@
 /ex-files
 /__pycache__/
+requiers.txt
+test.py
+tests_c.c
